@@ -1,0 +1,30 @@
+project_root: .
+checkpoint: spavista/SpaVistav1.pth
+results_root: results
+
+spatial_gene_expression:
+  data_roots:
+    her2st: data/SGE/her2st
+    cscc: data/SGE/skin
+  dataset: cscc
+  genes_type: HVG
+
+tumor_detection:
+  root_dir: data/tumor_detection/TRISTdata/ST-spotfiles/grouped_files
+  feature_cache_dir: data/tumor_detection/TRISTdata/feature_cache
+  test_folders: 23377,23903,23268,23508,23287
+
+hemit:
+  root: data/protein/HEMIT
+  labels_csv: data/protein/HEMIT/hemit_abundance_labels.csv
+  feature_cache_dir: data/protein/HEMIT/feature_cache
+
+visium_hd:
+  target_task: hvg200
+  base_dir: data/HR/visiumHD_Breast_Cancer_1002
+  train_slide: visium16
+  test_slide: visium8
+  he_tif: data/HR/visiumHD_Breast_Cancer_1002/all_res_he.tif
+  hvg_file: data/HR/visiumHD_Breast_Cancer_1002/HVG200_MARKER10.npy
+  expression_file: exp_HVG200_MARKER10.csv
+  feature_dir: data/HR/visiumHD_Breast_Cancer_1002/cache_features

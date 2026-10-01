@@ -1,0 +1,36 @@
+# Validated on Linux x86_64, Python 3.9.23, CUDA 11.8 (A6000).
+# Install the CUDA extension wheels and MambaVision separately as documented
+# in README.md. Install MambaVision 1.2.0 with --no-deps to preserve the
+# package versions validated for this repository.
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+torch==2.0.0+cu118
+torchvision==0.15.1+cu118
+pytorch-lightning==1.9.5
+timm==0.9.16
+transformers==4.50.0
+huggingface_hub==0.36.2
+hf-xet==1.6.0
+einops==0.8.2
+requests==2.32.5
+torchmetrics==1.8.2
+lightning-utilities==0.15.2
+ninja==1.13.0
+
+numpy==1.23.5
+pandas==1.5.3
+scipy==1.13.1
+scikit-learn==1.2.0
+scprep==1.2.3
+pyarrow==17.0.0
+Pillow==11.3.0
+tifffile==2024.8.30
+matplotlib==3.5.3
+tqdm==4.67.3
+PyYAML==6.0.3
+zarr==2.18.2
+numcodecs==0.12.1
+imagecodecs==2024.12.30
+
+# Notebook kernel; a Jupyter frontend is optional.
+ipykernel==6.29.5
