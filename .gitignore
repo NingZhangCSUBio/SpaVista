@@ -25,3 +25,8 @@ datasets/
 *.npz
 private_experiments/
 *.console.log
+
+!demo/sge_fold0/data/
+!demo/sge_fold0/data/**
+!demo/sge_fold0/checkpoints/
+!demo/sge_fold0/checkpoints/fold_0_linear_head.pt

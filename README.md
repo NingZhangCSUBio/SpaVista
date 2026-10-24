@@ -1,7 +1,27 @@
-# SpaVista downstream reproduction
+# SpaVista
 
-This repository provides the code required to evaluate the frozen **SpaVista** encoder on five downstream tasks.
+This repository provides the SpaVista H&E image encoder, a feature-extraction interface, and reproduction workflows for five downstream tasks.
 
+## Quick demo
+
+The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) includes three held-out test slides and a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the SpaVista encoder checkpoint, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same tested command from the repository root:
+
+```bash
+python demo/sge_fold0/run_demo.py --device-num 0
+```
+
+`--device-num` selects the CUDA-visible GPU index. Use `--device-num 1` for GPU 1; the run time below was recorded with GPU 1.
+
+The demo writes these files under `results/demo/cscc_hvg_fold0/`:
+
+```text
+median_performance_metrics.csv
+npy_pred/cscc_fold0_slice{0,1,2}_{pred,true}.npy
+gene_pcc/genepcc_fold0_slice{0,1,2}.csv
+figures/P2_ST_rep2_KLF6.png
+```
+
+The notebook displays the per-slide metrics and the spatial expression figure. On the tested NVIDIA RTX A6000 (48 GB), the three-slide demo completed in **75.2 seconds** with batch size 16 on GPU 1. The median gene PCC was **0.3209** and the median gene SCC was **0.3160**. These are fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
 
 ## Installation
 
@@ -16,11 +36,14 @@ python -m pip install --no-deps \
   'https://github.com/Dao-AILab/causal-conv1d/releases/download/v1.4.0/causal_conv1d-1.4.0+cu118torch2.0cxx11abiFALSE-cp39-cp39-linux_x86_64.whl' \
   'https://github.com/state-spaces/mamba/releases/download/v2.2.2/mamba_ssm-2.2.2+cu118torch2.0cxx11abiFALSE-cp39-cp39-linux_x86_64.whl' \
   'mambavision==1.2.0'
+python -m ipykernel install --user --name spavista --display-name "SpaVista"
 ```
 
 Install MambaVision with `--no-deps` to preserve the pinned package versions. The CUDA extension wheels above target Python 3.9, PyTorch 2.0, and CUDA 11.8 on Linux x86_64.
 
 This environment was validated on all five downstream tasks, including both Visium HD targets. `ipykernel` is included for notebook execution.
+
+Typical installation time: **20–45 minutes** on a Linux computer with a compatible NVIDIA GPU and broadband connection.
 
 ## Download checkpoint and data
 
@@ -31,7 +54,7 @@ python scripts/download_hf_assets.py --checkpoint
 python scripts/download_hf_assets.py --data
 ```
 
-The script places the checkpoint at `spavista/SpaVistav1.pth` and downloads `data/` into the repository root. It verifies the checkpoint against SHA-256 `8cb665b931341c21fe16ec7b7d455441869ba19deeedc6a901e4253ba71a83d9`. The data command requires the Hub repository to contain a top-level `data/` directory. For a different local layout, edit `configs/paths.yaml` as described below.
+The script places the checkpoint at `spavista/SpaVistav1.pth` and downloads `data/` into the repository root. The data command requires the Hub repository to contain a top-level `data/` directory. For a different local layout, edit `configs/paths.yaml` as described below.
 
 ## Data layout
 
@@ -80,9 +103,36 @@ SpaVista/
 
 The tree shows the files and directories used by the tasks; the dataset may contain additional files. `configs/paths.yaml` points to this layout. To use another location, edit the paths in that file. Relative paths are resolved from the repository root.
 
+## Use SpaVista on your own H&E images
+
+After installing the environment and downloading the checkpoint, place RGB H&E image patches (`.png`, `.jpg`, or `.jpeg`) in a directory. The following example extracts and saves one feature vector per image:
+
+```python
+from pathlib import Path
+
+import numpy as np
+
+from spavista import SpaVistaFeatureExtractor
+
+image_dir = Path("path/to/your/he_patches")
+image_paths = sorted(
+    path for path in image_dir.iterdir()
+    if path.suffix.lower() in {".png", ".jpg", ".jpeg"}
+)
+if not image_paths:
+    raise FileNotFoundError(f"No H&E image patches found in {image_dir}")
+
+extractor = SpaVistaFeatureExtractor("spavista/SpaVistav1.pth")
+features = np.stack([extractor.extract(path, device="cuda:0") for path in image_paths])
+np.savez("my_spavista_features.npz", features=features, image_names=[p.name for p in image_paths])
+print(features.shape)
+```
+
+The vectors in `features` follow the order in `image_names` and can be used with a task-specific downstream model. The five reproduction workflows below use their own dataset formats and task heads.
+
 ## Reproduction notebook
 
-Open `notebooks/SpaVista_downstream_with_visualizations.ipynb` in a Jupyter-compatible editor to run the tasks step by step. For each task, a training-and-testing cell is followed by a visualization cell.
+For the short evaluation-only example, open `demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb`. To run the complete downstream training, testing, and visualizations, open `notebooks/SpaVista_downstream_with_visualizations.ipynb` in a Jupyter-compatible editor. In the full notebook, each task's training-and-testing cell is followed by a visualization cell.
 
 ## Command-line reproduction
 

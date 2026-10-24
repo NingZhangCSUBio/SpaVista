@@ -1006,7 +1006,7 @@ def print_result(metrics: Dict):
     print("=" * 80)
 
 
-def train_cached_head(classifier: ClassificationHead, model_name: str, train_feature_loader: DataLoader, test_feature_loader: DataLoader, train_labels: np.ndarray, args, device: torch.device, save_dir: str):
+def train_cached_head(classifier: ClassificationHead, model_name: str, train_feature_loader: DataLoader, train_labels: np.ndarray, args, device: torch.device, save_dir: str):
     ensure_dir(save_dir)
     classifier.to(device)
     classifier.train()
@@ -1060,17 +1060,6 @@ def train_cached_head(classifier: ClassificationHead, model_name: str, train_fea
             "train_acc": correct / max(seen, 1),
             "lr": float(optimizer.param_groups[0]["lr"]),
         }
-
-        if args.eval_every_epoch > 0 and (epoch % int(args.eval_every_epoch) == 0 or epoch == args.max_epoch):
-            eval_metrics, _ = evaluate_cached_head(classifier, model_name, test_feature_loader, args, device, save_outputs=False)
-            for k, v in eval_metrics.items():
-                if isinstance(v, (int, float, np.integer, np.floating)):
-                    row[f"eval_{k}"] = float(v)
-            print(
-                f"[EVAL] {model_name} epoch={epoch:03d}, "
-                f"acc={eval_metrics['accuracy']:.6f}, bal_acc={eval_metrics['balanced_accuracy']:.6f}, "
-                f"auroc={eval_metrics['auroc']:.6f}, auprc={eval_metrics['auprc']:.6f}"
-            )
 
         history.append(row)
         print(f"[TRAIN] {model_name} epoch={epoch:03d}, loss={row['train_loss']:.6f}, acc={row['train_acc']:.6f}")
@@ -1158,7 +1147,7 @@ def run_one_model(train_ds, test_ds, args, device, output_dir):
     )
     train_labels = np.load(train_label_path, mmap_mode=None)
     train_cached_head(
-        classifier, model_name, train_loader, test_loader, train_labels, args, device, model_dir
+        classifier, model_name, train_loader, train_labels, args, device, model_dir
     )
     metrics, roc_xy = evaluate_cached_head(
         classifier, model_name, test_loader, args, device, model_dir, save_outputs=True
@@ -1207,7 +1196,6 @@ def main():
     parser.add_argument("--lr_gamma", type=float, default=0.9)
     parser.add_argument("--grad_clip_norm", type=float, default=0.0)
     parser.add_argument("--class_weight", type=str, default="balanced", choices=["none", "balanced"])
-    parser.add_argument("--eval_every_epoch", type=int, default=15, help="Evaluate on test set every N epochs. 0 disables intermediate evaluation.")
 
     # Evaluation
     parser.add_argument("--threshold", type=float, default=0.5)
@@ -1252,7 +1240,6 @@ def main():
     print(f"feature_cache_dir:    {args.feature_cache_dir}")
     print(f"normal:               {args.normal}")
     print(f"head_type:            {args.head_type}")
-    print(f"eval_every_epoch:     {args.eval_every_epoch}")
     print(f"device:               {device}")
     print("=" * 80)
 
