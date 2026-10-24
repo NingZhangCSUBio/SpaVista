@@ -9,7 +9,7 @@ data/
 checkpoints/
 results/
 notebook_runs/
-notebooks/figures/
+tutorial/figures/
 metadata/
 outputs/
 feature_cache/
