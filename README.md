@@ -132,7 +132,7 @@ The vectors in `features` follow the order in `image_names` and can be used with
 
 ## Reproduction notebook
 
-For the short evaluation-only example, open `demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb`. To run the complete downstream training, testing, and visualizations, open `tutorial/SpaVista_downstream_with_visualizations.ipynb` in a Jupyter-compatible editor. In the full notebook, each task's training-and-testing cell is followed by a visualization cell.
+For the short evaluation-only example, open `demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb`. For the complete downstream training, testing, and visualizations, open `tutorial/SpaVista_downstream_results_preview.ipynb` in a Jupyter-compatible editor. The notebook includes saved outputs and can be run cell by cell; each task's training-and-testing cell is followed by a visualization cell.
 
 ## Command-line reproduction
 
