@@ -148,10 +148,11 @@ The default configuration runs cSCC-HVG. To run HER2ST or another gene panel, se
 python -m tasks.spatial_gene_expression.run
 ```
 
-### 2. Tumor detection
+### 2. Visium HD high-resolution inference
 
 ```bash
-python -m tasks.tumor_detection.run
+python -m tasks.high_resolution.run --target_task hvg200
+python -m tasks.high_resolution.run --target_task marker10
 ```
 
 ### 3. Protein abundance prediction
@@ -166,11 +167,10 @@ python -m tasks.protein_abundance.run
 python -m tasks.mif_generation.run
 ```
 
-### 5. Visium HD high-resolution inference
+### 5. Tumor detection
 
 ```bash
-python -m tasks.high_resolution.run --target_task hvg200
-python -m tasks.high_resolution.run --target_task marker10
+python -m tasks.tumor_detection.run
 ```
 
 ## Feature caches
