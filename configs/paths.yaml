@@ -21,10 +21,10 @@ hemit:
 
 visium_hd:
   target_task: hvg200
-  base_dir: data/HR/visiumHD_Breast_Cancer_1002
+  base_dir: data/HR/visiumHD_Breast_Cancer
   train_slide: visium16
   test_slide: visium8
-  he_tif: data/HR/visiumHD_Breast_Cancer_1002/all_res_he.tif
-  hvg_file: data/HR/visiumHD_Breast_Cancer_1002/HVG200_MARKER10.npy
+  he_tif: data/HR/visiumHD_Breast_Cancer/all_res_he.tif
+  hvg_file: data/HR/visiumHD_Breast_Cancer/HVG200_MARKER10.npy
   expression_file: exp_HVG200_MARKER10.csv
-  feature_dir: data/HR/visiumHD_Breast_Cancer_1002/cache_features
+  feature_dir: data/HR/visiumHD_Breast_Cancer/cache_features

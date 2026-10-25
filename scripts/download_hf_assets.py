@@ -18,7 +18,7 @@ REQUIRED_DATA_DIRS = (
     "data/SGE/skin",
     "data/tumor_detection/TRISTdata",
     "data/protein/HEMIT",
-    "data/HR/visiumHD_Breast_Cancer_1002",
+    "data/HR/visiumHD_Breast_Cancer",
 )
 
 

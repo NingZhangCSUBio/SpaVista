@@ -93,7 +93,7 @@ SpaVista/
     │       ├── test/{input,label}/
     │       └── feature_cache/
     └── HR/
-        └── visiumHD_Breast_Cancer_1002/
+        └── visiumHD_Breast_Cancer/
             ├── all_res_he.tif
             ├── HVG200_MARKER10.npy
             ├── visium16/{exp_HVG200_MARKER10.csv,subposition.parquet}
