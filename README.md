@@ -2,6 +2,8 @@
 
 This repository provides the SpaVista H&E image encoder, a feature-extraction interface, and reproduction workflows for five downstream tasks.
 
+Tutorials and detailed instructions: [SpaVista Documentation](https://spavista.readthedocs.io/en/latest/).
+
 ## Quick demo
 
 The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) includes three held-out test slides and a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the SpaVista encoder checkpoint, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same tested command from the repository root:
