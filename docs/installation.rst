@@ -3,10 +3,12 @@ Installation
 
 The validated environment is Linux x86_64 with Python 3.9.23, PyTorch 2.0.0+cu118, CUDA 11.8, and a compatible NVIDIA GPU and driver. The reported workflows were validated on an NVIDIA RTX A6000.
 
-From the repository root, create and activate the environment:
+Clone the repository, then create and activate the environment:
 
 .. code-block:: bash
 
+   git clone https://github.com/NingZhangCSUBio/SpaVista.git
+   cd SpaVista
    conda create -n SpaVista python=3.9.23 pip -y
    conda activate SpaVista
    python -m pip install -r requirements.txt

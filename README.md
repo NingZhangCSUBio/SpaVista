@@ -30,6 +30,7 @@ The notebook displays the per-slide metrics and the spatial expression figure. O
 The validated environment uses Linux x86_64, Python 3.9.23, PyTorch 2.0.0+cu118, and CUDA 11.8. A compatible NVIDIA driver and GPU are required.
 
 ```bash
+git clone https://github.com/NingZhangCSUBio/SpaVista.git
 cd SpaVista
 conda create -n SpaVista python=3.9.23 pip -y
 conda activate SpaVista
