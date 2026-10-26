@@ -29,20 +29,26 @@ Typical installation time: **20–45 minutes** on a Linux computer with a compat
 
 ## Download checkpoint and data
 
-The [SpaVista Hugging Face repository](https://huggingface.co/ZNfiona1997/SpaVista/tree/main) is the release location for the encoder checkpoint and dataset. The dataset must be published under a top-level `data/` directory with its structure unchanged. From the SpaVista code repository root, run:
+The [SpaVista Hugging Face repository](https://huggingface.co/ZNfiona1997/SpaVista/tree/main) contains the encoder checkpoint and data. From the SpaVista code repository root, choose the download you need.
+
+For the single-slide Quick demo, download the encoder checkpoint, one cSCC slide, and its trained prediction head:
+
+```bash
+python scripts/download_hf_assets.py --checkpoint --demo
+```
+
+For all downstream tasks, download the encoder checkpoint and complete dataset:
 
 ```bash
 python scripts/download_hf_assets.py --checkpoint
 python scripts/download_hf_assets.py --data
 ```
 
-The script places the checkpoint at `spavista/SpaVistav1.pth` and downloads `data/` into the repository root. The data command requires the Hub repository to contain a top-level `data/` directory. For a different local layout, edit `configs/paths.yaml` as described below.
-
-If you only want to run the Quick demo, skip the full `--data` download. Run `python scripts/download_hf_assets.py --checkpoint --demo` instead; `--demo` downloads only the required slide files and trained prediction head from Hugging Face.
+The checkpoint is saved at `spavista/SpaVistav1.pth`. The `--data` option downloads the complete dataset to `data/`; the `--demo` option downloads only the Demo assets to `demo/sge_fold0/`. For a different full-dataset layout, edit `configs/paths.yaml` as described below.
 
 ## Quick demo
 
-The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) evaluates one held-out test slide, `P2_ST_rep2`, with a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and running `python scripts/download_hf_assets.py --checkpoint --demo`, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same command from the repository root:
+The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) evaluates one held-out test slide, `P2_ST_rep2`, with a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the Quick demo assets above, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same command from the repository root:
 
 ```bash
 python demo/sge_fold0/run_demo.py --device-num 0
