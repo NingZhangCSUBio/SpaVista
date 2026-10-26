@@ -7,7 +7,7 @@ Clone the repository, then create and activate the environment:
 
 .. code-block:: bash
 
-   git clone https://github.com/NingZhangCSUBio/SpaVista.git
+   git clone --depth 1 https://github.com/NingZhangCSUBio/SpaVista.git
    cd SpaVista
    conda create -n SpaVista python=3.9.23 pip -y
    conda activate SpaVista
