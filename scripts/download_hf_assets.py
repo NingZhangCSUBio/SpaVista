@@ -21,9 +21,15 @@ REQUIRED_DATA_DIRS = (
     "data/HR/visiumHD_Breast_Cancer",
 )
 DEMO_FILES = (
+    ("data/SGE/skin/GSE144240_RAW/GSM4284316_P2_ST_rep1.jpg", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284316_P2_ST_rep1.jpg"),
+    ("data/SGE/skin/GSE144240_RAW/GSM4284316_spot_data-selection-P2_ST_rep1.tsv", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284316_spot_data-selection-P2_ST_rep1.tsv"),
+    ("data/SGE/skin/skin_ST-cnts_171/P2_ST_rep1_sub.parquet", "demo/sge_fold0/data/skin/skin_ST-cnts_171/P2_ST_rep1_sub.parquet"),
     ("data/SGE/skin/GSE144240_RAW/GSM4284317_P2_ST_rep2.jpg", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284317_P2_ST_rep2.jpg"),
     ("data/SGE/skin/GSE144240_RAW/GSM4284317_spot_data-selection-P2_ST_rep2.tsv", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284317_spot_data-selection-P2_ST_rep2.tsv"),
     ("data/SGE/skin/skin_ST-cnts_171/P2_ST_rep2_sub.parquet", "demo/sge_fold0/data/skin/skin_ST-cnts_171/P2_ST_rep2_sub.parquet"),
+    ("data/SGE/skin/GSE144240_RAW/GSM4284318_P2_ST_rep3.jpg", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284318_P2_ST_rep3.jpg"),
+    ("data/SGE/skin/GSE144240_RAW/GSM4284318_spot_data-selection-P2_ST_rep3.tsv", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284318_spot_data-selection-P2_ST_rep3.tsv"),
+    ("data/SGE/skin/skin_ST-cnts_171/P2_ST_rep3_sub.parquet", "demo/sge_fold0/data/skin/skin_ST-cnts_171/P2_ST_rep3_sub.parquet"),
     ("data/SGE/skin/skin_hvg_cut_1000.npy", "demo/sge_fold0/data/skin/skin_hvg_cut_1000.npy"),
     ("demo/sge_fold0/checkpoints/fold_0_linear_head.pt", "demo/sge_fold0/checkpoints/fold_0_linear_head.pt"),
 )
@@ -102,7 +108,7 @@ def main() -> None:
     parser.add_argument("--repo-id", default=REPO_ID, help="Hugging Face model repository")
     parser.add_argument("--checkpoint", action="store_true", help="Download the SpaVista encoder checkpoint")
     parser.add_argument("--data", action="store_true", help="Download the data/ directory")
-    parser.add_argument("--demo", action="store_true", help="Download only the single-slide demo assets")
+    parser.add_argument("--demo", action="store_true", help="Download the three-slide fold-0 demo assets")
     args = parser.parse_args()
     if not args.checkpoint and not args.data and not args.demo:
         parser.error("Select --checkpoint, --data, --demo, or a combination.")

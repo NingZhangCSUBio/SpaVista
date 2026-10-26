@@ -1,4 +1,4 @@
-"""Run the cSCC-HVG fold-0 test on the bundled P2_ST_rep2 slide."""
+"""Run the cSCC-HVG fold-0 test on the three held-out demo slides."""
 
 import argparse
 import hashlib
@@ -23,7 +23,7 @@ DATA = DEMO / "data" / "skin"
 HEAD = DEMO / "checkpoints" / "fold_0_linear_head.pt"
 TAG = "demo/cscc_hvg_fold0"
 OUTPUT = ROOT / "results" / TAG
-SLIDES = ["P2_ST_rep2"]
+SLIDES = [f"P2_ST_rep{n}" for n in (1, 2, 3)]
 
 
 def sha256(path):
@@ -81,7 +81,7 @@ def minmax(values):
 
 
 def save_figure(gene="KLF6", slice_index=1):
-    slide = SLIDES[0]
+    slide = SLIDES[slice_index]
     prefix = f"cscc_fold0_slice{slice_index}"
     predicted = np.load(OUTPUT / "npy_pred" / f"{prefix}_pred.npy")
     measured = np.load(OUTPUT / "npy_pred" / f"{prefix}_true.npy")
@@ -151,7 +151,6 @@ def main():
         "--dataset", "cscc",
         "--genes_type", "HVG",
         "--fold", "0",
-        "--test_slice", "1",
         "--train_test", "False",
         "--tag", TAG,
         "--device_num", str(args.device_num),
@@ -166,8 +165,8 @@ def main():
     metrics_path = OUTPUT / "median_performance_metrics.csv"
     metrics = pd.read_csv(metrics_path)
     summary = metrics[["medpcc_gene", "med_spearman_gene"]].median()
-    print(f"Gene PCC: {summary['medpcc_gene']:.4f}")
-    print(f"Gene SCC: {summary['med_spearman_gene']:.4f}")
+    print(f"Median gene PCC across three slices: {summary['medpcc_gene']:.4f}")
+    print(f"Median gene SCC across three slices: {summary['med_spearman_gene']:.4f}")
     print(f"Metrics: {metrics_path}")
     print(f"Figure: {figure}")
     print(f"Elapsed time: {elapsed:.1f} seconds")

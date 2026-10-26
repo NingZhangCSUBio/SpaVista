@@ -31,7 +31,7 @@ Typical installation time: **20–45 minutes** on a Linux computer with a compat
 
 The [SpaVista Hugging Face repository](https://huggingface.co/ZNfiona1997/SpaVista/tree/main) contains the encoder checkpoint and data. From the SpaVista code repository root, choose the download you need.
 
-For the single-slide Quick demo, download the encoder checkpoint, one cSCC slide, and its trained prediction head:
+For the fold-0 Quick demo, download the encoder checkpoint, three cSCC test slides, and their trained prediction head:
 
 ```bash
 python scripts/download_hf_assets.py --checkpoint --demo
@@ -48,7 +48,7 @@ The checkpoint is saved at `spavista/SpaVistav1.pth`. The `--data` option downlo
 
 ## Quick demo
 
-The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) evaluates one held-out test slide, `P2_ST_rep2`, with a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the Quick demo assets above, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same command from the repository root:
+The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) evaluates three held-out test slides, `P2_ST_rep1`, `P2_ST_rep2`, and `P2_ST_rep3`, with a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the Quick demo assets above, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same command from the repository root:
 
 ```bash
 python demo/sge_fold0/run_demo.py --device-num 0
@@ -60,12 +60,12 @@ The demo writes these files under `results/demo/cscc_hvg_fold0/`:
 
 ```text
 median_performance_metrics.csv
-npy_pred/cscc_fold0_slice1_{pred,true}.npy
-gene_pcc/genepcc_fold0_slice1.csv
+npy_pred/cscc_fold0_slice{0,1,2}_{pred,true}.npy
+gene_pcc/genepcc_fold0_slice{0,1,2}.csv
 figures/P2_ST_rep2_KLF6.png
 ```
 
-The notebook displays the slide metrics and the spatial expression figure. For `P2_ST_rep2`, the gene PCC was **0.3209** and the gene SCC was **0.3160** on the tested NVIDIA RTX A6000 (48 GB). These are single-slide fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
+The notebook displays the three slide metrics and the spatial expression figure for `P2_ST_rep2`. On the tested NVIDIA RTX A6000 (48 GB), the three-slide demo completed in **75.2 seconds** with batch size 16 on GPU 1. The median gene PCC across the slides was **0.3209** and the median gene SCC was **0.3160**. These are fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
 
 ## Data layout
 

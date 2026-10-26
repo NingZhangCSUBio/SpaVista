@@ -1,7 +1,7 @@
 Checkpoint and data
 ===================
 
-The released encoder checkpoint and companion data are in the `SpaVista Hugging Face repository <https://huggingface.co/ZNfiona1997/SpaVista/tree/main>`_. For the single-slide demo, run this command from the code repository root:
+The released encoder checkpoint and companion data are in the `SpaVista Hugging Face repository <https://huggingface.co/ZNfiona1997/SpaVista/tree/main>`_. For the three-slide fold-0 demo, run this command from the code repository root:
 
 .. code-block:: bash
 
