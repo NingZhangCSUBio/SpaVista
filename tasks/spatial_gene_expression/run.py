@@ -584,7 +584,8 @@ def train_and_test_ibot_mamba(args, fold):
 
     all_fold_metrics = []
 
-    for slice_idx in range(slices_for_fold):
+    selected_slices = range(slices_for_fold) if args.test_slice is None else [args.test_slice]
+    for slice_idx in selected_slices:
         print(f"Testing slice {slice_idx} for fold {fold}.")
 
         test_loader = get_test_loader(
@@ -750,6 +751,13 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--test_slice",
+        type=int,
+        default=None,
+        help="Test one zero-based slide index within the selected fold; omit to test all slides.",
+    )
+
+    parser.add_argument(
         "--tag",
         type=str,
         default=None,
@@ -835,6 +843,14 @@ if __name__ == "__main__":
     fold_total = len(slice_num_list)
     if args.fold is not None and not 0 <= args.fold < fold_total:
         parser.error(f"--fold must be between 0 and {fold_total - 1} for {args.dataset} {args.genes_type}.")
+    if args.test_slice is not None:
+        if args.fold is None:
+            parser.error("--test_slice requires --fold.")
+        if not 0 <= args.test_slice < slice_num_list[args.fold]:
+            parser.error(
+                f"--test_slice must be between 0 and {slice_num_list[args.fold] - 1} "
+                f"for fold {args.fold}."
+            )
 
     if args.tag is None or str(args.tag).strip() == "":
         args.tag = make_auto_tag(args)

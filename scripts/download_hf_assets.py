@@ -20,6 +20,13 @@ REQUIRED_DATA_DIRS = (
     "data/protein/HEMIT",
     "data/HR/visiumHD_Breast_Cancer",
 )
+DEMO_FILES = (
+    ("data/SGE/skin/GSE144240_RAW/GSM4284317_P2_ST_rep2.jpg", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284317_P2_ST_rep2.jpg"),
+    ("data/SGE/skin/GSE144240_RAW/GSM4284317_spot_data-selection-P2_ST_rep2.tsv", "demo/sge_fold0/data/skin/GSE144240_RAW/GSM4284317_spot_data-selection-P2_ST_rep2.tsv"),
+    ("data/SGE/skin/skin_ST-cnts_171/P2_ST_rep2_sub.parquet", "demo/sge_fold0/data/skin/skin_ST-cnts_171/P2_ST_rep2_sub.parquet"),
+    ("data/SGE/skin/skin_hvg_cut_1000.npy", "demo/sge_fold0/data/skin/skin_hvg_cut_1000.npy"),
+    ("demo/sge_fold0/checkpoints/fold_0_linear_head.pt", "demo/sge_fold0/checkpoints/fold_0_linear_head.pt"),
+)
 
 
 def sha256(path: Path) -> str:
@@ -73,18 +80,38 @@ def download_data(repo_id: str) -> None:
     print(f"Downloaded data into: {ROOT / 'data'}")
 
 
+def download_demo(repo_id: str) -> None:
+    for remote_name, local_name in DEMO_FILES:
+        target = ROOT / local_name
+        if target.is_file():
+            print(f"Already present: {target}")
+            continue
+        source = Path(hf_hub_download(repo_id=repo_id, filename=remote_name, repo_type="model"))
+        target.parent.mkdir(parents=True, exist_ok=True)
+        temporary = target.with_name(target.name + ".download")
+        try:
+            shutil.copyfile(source, temporary)
+            os.replace(temporary, target)
+        finally:
+            temporary.unlink(missing_ok=True)
+        print(f"Saved demo asset: {target}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-id", default=REPO_ID, help="Hugging Face model repository")
     parser.add_argument("--checkpoint", action="store_true", help="Download the SpaVista encoder checkpoint")
     parser.add_argument("--data", action="store_true", help="Download the data/ directory")
+    parser.add_argument("--demo", action="store_true", help="Download only the single-slide demo assets")
     args = parser.parse_args()
-    if not args.checkpoint and not args.data:
-        parser.error("Select --checkpoint, --data, or both.")
+    if not args.checkpoint and not args.data and not args.demo:
+        parser.error("Select --checkpoint, --data, --demo, or a combination.")
     if args.checkpoint:
         download_checkpoint(args.repo_id)
     if args.data:
         download_data(args.repo_id)
+    if args.demo:
+        download_demo(args.repo_id)
 
 
 if __name__ == "__main__":

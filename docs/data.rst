@@ -10,6 +10,12 @@ The released encoder checkpoint and companion data are in the `SpaVista Hugging 
 
 The checkpoint is placed at ``spavista/SpaVistav1.pth`` and the datasets under ``data/``. Keep the downloaded directory structure unchanged. The paths used by the downstream workflows are defined in ``configs/paths.yaml``; edit that file if your data is elsewhere.
 
+For the single-slide demo, download only its required assets instead of the full dataset:
+
+.. code-block:: bash
+
+   python scripts/download_hf_assets.py --checkpoint --demo
+
 The task directories are:
 
 .. code-block:: text

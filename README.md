@@ -9,7 +9,7 @@ Tutorials and detailed instructions: [SpaVista Documentation](https://spavista.r
 The validated environment uses Linux x86_64, Python 3.9.23, PyTorch 2.0.0+cu118, and CUDA 11.8. A compatible NVIDIA driver and GPU are required.
 
 ```bash
-git clone https://github.com/NingZhangCSUBio/SpaVista.git
+git clone --depth 1 https://github.com/NingZhangCSUBio/SpaVista.git
 cd SpaVista
 conda create -n SpaVista python=3.9.23 pip -y
 conda activate SpaVista
@@ -38,11 +38,11 @@ python scripts/download_hf_assets.py --data
 
 The script places the checkpoint at `spavista/SpaVistav1.pth` and downloads `data/` into the repository root. The data command requires the Hub repository to contain a top-level `data/` directory. For a different local layout, edit `configs/paths.yaml` as described below.
 
-If you only want to run the Quick demo, download the checkpoint but skip the `--data` command. The demo's three test slides and trained prediction head are included in this repository.
+If you only want to run the Quick demo, skip the full `--data` download. Run `python scripts/download_hf_assets.py --checkpoint --demo` instead; `--demo` downloads only the required slide files and trained prediction head from Hugging Face.
 
 ## Quick demo
 
-The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) includes three held-out test slides and a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the SpaVista encoder checkpoint, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same tested command from the repository root:
+The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) evaluates one held-out test slide, `P2_ST_rep2`, with a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and running `python scripts/download_hf_assets.py --checkpoint --demo`, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same command from the repository root:
 
 ```bash
 python demo/sge_fold0/run_demo.py --device-num 0
@@ -54,12 +54,12 @@ The demo writes these files under `results/demo/cscc_hvg_fold0/`:
 
 ```text
 median_performance_metrics.csv
-npy_pred/cscc_fold0_slice{0,1,2}_{pred,true}.npy
-gene_pcc/genepcc_fold0_slice{0,1,2}.csv
+npy_pred/cscc_fold0_slice1_{pred,true}.npy
+gene_pcc/genepcc_fold0_slice1.csv
 figures/P2_ST_rep2_KLF6.png
 ```
 
-The notebook displays the per-slide metrics and the spatial expression figure. On the tested NVIDIA RTX A6000 (48 GB), the three-slide demo completed in **75.2 seconds** with batch size 16 on GPU 1. The median gene PCC was **0.3209** and the median gene SCC was **0.3160**. These are fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
+The notebook displays the slide metrics and the spatial expression figure. For `P2_ST_rep2`, the gene PCC was **0.3209** and the gene SCC was **0.3160** on the tested NVIDIA RTX A6000 (48 GB). These are single-slide fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
 
 ## Data layout
 
