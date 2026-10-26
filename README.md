@@ -4,27 +4,6 @@ This repository provides the SpaVista H&E image encoder, a feature-extraction in
 
 Tutorials and detailed instructions: [SpaVista Documentation](https://spavista.readthedocs.io/en/latest/).
 
-## Quick demo
-
-The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) includes three held-out test slides and a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the SpaVista encoder checkpoint, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same tested command from the repository root:
-
-```bash
-python demo/sge_fold0/run_demo.py --device-num 0
-```
-
-`--device-num` selects the CUDA-visible GPU index. Use `--device-num 1` for GPU 1; the run time below was recorded with GPU 1.
-
-The demo writes these files under `results/demo/cscc_hvg_fold0/`:
-
-```text
-median_performance_metrics.csv
-npy_pred/cscc_fold0_slice{0,1,2}_{pred,true}.npy
-gene_pcc/genepcc_fold0_slice{0,1,2}.csv
-figures/P2_ST_rep2_KLF6.png
-```
-
-The notebook displays the per-slide metrics and the spatial expression figure. On the tested NVIDIA RTX A6000 (48 GB), the three-slide demo completed in **75.2 seconds** with batch size 16 on GPU 1. The median gene PCC was **0.3209** and the median gene SCC was **0.3160**. These are fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
-
 ## Installation
 
 The validated environment uses Linux x86_64, Python 3.9.23, PyTorch 2.0.0+cu118, and CUDA 11.8. A compatible NVIDIA driver and GPU are required.
@@ -58,6 +37,29 @@ python scripts/download_hf_assets.py --data
 ```
 
 The script places the checkpoint at `spavista/SpaVistav1.pth` and downloads `data/` into the repository root. The data command requires the Hub repository to contain a top-level `data/` directory. For a different local layout, edit `configs/paths.yaml` as described below.
+
+If you only want to run the Quick demo, download the checkpoint but skip the `--data` command. The demo's three test slides and trained prediction head are included in this repository.
+
+## Quick demo
+
+The [cSCC-HVG fold-0 demo notebook](demo/sge_fold0/SpaVista_SGE_fold0_demo.ipynb) includes three held-out test slides and a trained prediction head. It runs inference and evaluation only; no training is required. After installing the environment and downloading the SpaVista encoder checkpoint, open the notebook with the `SpaVista` kernel and run its cells in order. It executes the same tested command from the repository root:
+
+```bash
+python demo/sge_fold0/run_demo.py --device-num 0
+```
+
+`--device-num` selects the CUDA-visible GPU index. Use `--device-num 1` for GPU 1; the run time below was recorded with GPU 1.
+
+The demo writes these files under `results/demo/cscc_hvg_fold0/`:
+
+```text
+median_performance_metrics.csv
+npy_pred/cscc_fold0_slice{0,1,2}_{pred,true}.npy
+gene_pcc/genepcc_fold0_slice{0,1,2}.csv
+figures/P2_ST_rep2_KLF6.png
+```
+
+The notebook displays the per-slide metrics and the spatial expression figure. On the tested NVIDIA RTX A6000 (48 GB), the three-slide demo completed in **75.2 seconds** with batch size 16 on GPU 1. The median gene PCC was **0.3209** and the median gene SCC was **0.3160**. These are fold-0 demo results, not the four-fold aggregate; small numerical differences may occur on other systems.
 
 ## Data layout
 
