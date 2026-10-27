@@ -116,30 +116,21 @@ The tree shows the files and directories used by the tasks; the dataset may cont
 
 ## Use SpaVista on your own H&E images
 
-After installing the environment and downloading the checkpoint, place RGB H&E image patches (`.png`, `.jpg`, or `.jpeg`) in a directory. The following example extracts and saves one feature vector per image:
+After installing the environment and downloading the checkpoint, run either command from the repository root. Inputs should be H&E image patches, not whole-slide images. Supported formats are `.png`, `.jpg`, `.jpeg`, `.tif`, `.tiff`, `.bmp`, and `.webp`.
 
-```python
-from pathlib import Path
+For one image:
 
-import numpy as np
-
-from spavista import SpaVistaFeatureExtractor
-
-image_dir = Path("path/to/your/he_patches")
-image_paths = sorted(
-    path for path in image_dir.iterdir()
-    if path.suffix.lower() in {".png", ".jpg", ".jpeg"}
-)
-if not image_paths:
-    raise FileNotFoundError(f"No H&E image patches found in {image_dir}")
-
-extractor = SpaVistaFeatureExtractor("spavista/SpaVistav1.pth")
-features = np.stack([extractor.extract(path, device="cuda:0") for path in image_paths])
-np.savez("my_spavista_features.npz", features=features, image_names=[p.name for p in image_paths])
-print(features.shape)
+```bash
+python scripts/extract_feature.py --image path/to/patch.tif --checkpoint spavista/SpaVistav1.pth --output patch_feature.npy --device cuda:0
 ```
 
-The vectors in `features` follow the order in `image_names` and can be used with a task-specific downstream model. The five reproduction workflows below use their own dataset formats and task heads.
+For all supported images directly inside one directory:
+
+```bash
+python scripts/extract_feature.py --image-dir path/to/he_patches --checkpoint spavista/SpaVistav1.pth --output my_spavista_features.npz --device cuda:0
+```
+
+The single-image command saves one feature vector as `.npy`. The directory command saves `features` and `image_names` in `.npz`; each feature row corresponds to the name at the same index. Subdirectories are not scanned. TIFF images are opened as RGB patches; multi-page TIFFs use the first page. The five reproduction workflows below use their own dataset formats and task heads.
 
 ## Reproduction notebook
 
