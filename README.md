@@ -221,7 +221,7 @@ torchrun --standalone --nproc_per_node=8 main_ibot.py \
   --output_dir work_dirs/spavista
 ```
 
-The original training log records 20 epochs and eight distributed ranks (`world_size: 8`). The script saves the latest full checkpoint to `<output_dir>/checkpoint.pth`.
+The script saves the latest full checkpoint to `<output_dir>/checkpoint.pth`.
 
 ### Extract encoder weights
 
