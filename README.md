@@ -178,3 +178,61 @@ python -m tasks.tumor_detection.run
 ## Feature caches
 
 The Hugging Face `data/` release includes pre-extracted image features for tumor detection, protein abundance prediction, and Visium HD inference. The code uses a compatible cache when available. If you organize the datasets yourself and a compatible cache is not found, the code extracts and saves the features automatically; the first run will take longer.
+
+## Pre-training
+
+The SpaVista pre-training code is available in a [Google Drive folder](https://drive.google.com/drive/folders/1inqf9Vw4A45oULlol3ZveeaIAVUlgMtm?usp=sharing). Access to this folder is restricted; request access through Google Drive if needed. SpaVista was pre-trained using eight NVIDIA Tesla V100S GPUs, each with 32 GB of memory.
+
+SpaVista uses an iBOT-based training workflow with a MambaVision encoder. The HEST-1K patch-directory organization follows the [SpaFoundation pre-training instructions](https://github.com/NingZhangCSUBio/SpaFoundation#model-pre-training); the encoder architecture differs. The pre-training package contains `main_ibot.py` (training), `extract_ibot_mamba.py` (encoder-weight extraction), `loader.py`, `utils.py`, and the MambaVision adapter and iBOT head in `models/`.
+
+### Data preparation
+
+Download the [HEST-1K patches](https://huggingface.co/datasets/MahmoodLab/hest) and convert each sample's patch file into individual image patches. Put each sample in its own folder under a common `data/` directory, for example:
+
+```text
+data/
+├── ZEN81/
+│   ├── ZEN81_001.jpg
+│   └── ...
+├── ZEN80/
+│   └── ...
+└── ...
+```
+
+The loader uses `torchvision.datasets.ImageFolder`. Before training, remove samples listed in `The samples that need to be excluded from HEST-1K.txt` in the pre-training package to avoid downstream evaluation overlap. Patch conversion and sample exclusion are not automated by these scripts.
+
+### Environment and initial weights
+
+Training requires Linux, CUDA-capable GPUs, and compatible versions of PyTorch, torchvision, CUDA/NCCL, Pillow, NumPy, tensorboardX, and `mambavision`. The package does not specify an exact environment lockfile. By default, the student and teacher initialize from an ImageNet-pretrained MambaVision-B checkpoint. Place the matching checkpoint beside `main_ibot.py` as `mambavision_base_1k.pth.tar`, or pass its location with `--mambavision_model_path`. Check the checkpoint's redistribution terms before sharing it separately.
+
+### Run pre-training
+
+From the pre-training code directory, run on one GPU:
+
+```bash
+python main_ibot.py --data_path data --output_dir work_dirs/spavista
+```
+
+For eight GPUs on one node, launch eight distributed processes:
+
+```bash
+torchrun --standalone --nproc_per_node=8 main_ibot.py \
+  --data_path data \
+  --output_dir work_dirs/spavista
+```
+
+The original training log records 20 epochs and eight distributed ranks (`world_size: 8`). The script saves the latest full checkpoint to `<output_dir>/checkpoint.pth`.
+
+### Extract encoder weights
+
+After training, extract the teacher backbone from the full checkpoint:
+
+```bash
+python extract_ibot_mamba.py \
+  --checkpoint work_dirs/spavista/checkpoint.pth \
+  --output work_dirs/spavista/teacher_encoder.pth \
+  --checkpoint_key teacher \
+  --target adapter
+```
+
+The default export contains a `state_dict` and metadata. Use `--target official` for keys of the underlying MambaVision model, or `--save_plain_state_dict true` if the downstream loader expects a bare state dictionary.
