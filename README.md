@@ -4,6 +4,8 @@ This repository provides the SpaVista H&E image encoder, a feature-extraction in
 
 Tutorials and detailed instructions: [SpaVista Documentation](https://spavista.readthedocs.io/en/latest/).
 
+![Overview of SpaVista pretraining, feature extraction, and downstream tasks](docs/images/Figure1.jpg)
+
 ## Installation
 
 The validated environment uses Linux x86_64, Python 3.9.23, PyTorch 2.0.0+cu118, and CUDA 11.8. A compatible NVIDIA driver and GPU are required.
